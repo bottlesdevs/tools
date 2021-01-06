@@ -17,6 +17,7 @@ function execute_routine {
 }
 
 # routine execution
+# Example using Notepad++ setup
 wine setup.exe &
 
 # First dialog
