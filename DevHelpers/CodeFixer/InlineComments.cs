@@ -8,7 +8,6 @@ namespace CodeFixer
     {
         public bool LastResult = false;
 
-        // costruttori
         public InlineComments(){}
         public InlineComments(string path, bool isFile = false)
         {
