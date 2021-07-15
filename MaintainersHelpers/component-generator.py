@@ -1,33 +1,3 @@
-'''create a program with arguments:
--repository: components (currently the only supported)
--maintainer: the maintainer name (your name)
--name: the component name
--provider: the provider name
--channel: the channel name (e.g. stable, unstable)
--file-url: the direct http url to the component file
--rename: the new name for the component (optional)
-the program create a folder with name _tmp in the current directory
-then downlaod the file-url to the _tmp folder and get its MD5 hash
-and save its file size
-get the component name from the file name
-if rename is specificed, the file name will be the new name
-then create a new yaml file with the following format:
----
-Name: <component name>
-Provider: <provider name>
-Channel: <channel name>
-File:
- - file_name: <file name>
-   url: <file url>
-   file_checksum: <file md5 hash>
-   file_size: <file size>
-   rename: <new name> (only if rename is specified)
-and save the yaml file in the current directory.
-
-Note: use logging module to log the output of the program
-'''
-
-
 import logging
 import hashlib
 import os
