@@ -6,25 +6,25 @@ HAS_NVIDIA=false
 HAS_NOUVEAU=false
 
 # AMD - check if gpu is amd
-if ! [ "$(lspci | grep AMD)" = "" ]; then
+if lspci | grep -qiP 'VGA.*amd/ati'; then
     HAS_AMD=true
     echo -e "\e[1mAMD\e[0m graphics driver detected"
 fi
 
 # Intel - check if gpu is intel
-if ! [ "$(lspci | grep Intel)" = "" ]; then
+if  lspci | grep -qiP 'VGA.*Intel'; then
     HAS_INTEL=true
     echo -e "\e[1mIntel\e[0m graphics driver detected"
 fi
 
 # Nvidia - check if gpu is nvidia
-if ! [ "$(lspci | grep NVIDIA)" = "" ]; then
+if  lspci | grep -qiP 'VGA.*NVIDIA'; then
     HAS_NVIDIA=true
     echo -e "\e[1mNVIDIA\e[0m graphics driver detected"
 fi
 
 # Nouveau - check if gpu is nouveau
-if ! [ "$(lspci | grep Nouveau)" = "" ]; then
+if  lspci | grep -qiP 'VGA.*Nouveau'; then
     HAS_NOUVEAU=true
     echo -e "\e[1mNouveau\e[0m graphics driver detected"
 fi
