@@ -54,7 +54,7 @@ def download_file(url):
                 progress_bar(file_name, count, block_size, total_size)
         return file_path
     else:
-        print(f"[ERROR] | {file_name}: File size is 0")
+        print(f"\n[ERROR] | {file_name}: File size is 0")
 
 
 def update_checksum(file_path, checksum):
@@ -80,7 +80,7 @@ def process_manifest(manifest):
 
             if checksum != step['file_checksum']:
                 print(
-                    f"[HASH_MISMATCH] | {name}", 
+                    f"\n[HASH_MISMATCH] | {name}", 
                     f"---> (updating) | {name}: {checksum} -> {step['file_checksum']}", 
                     sep="\n\t"
                 )
@@ -112,7 +112,7 @@ def main():
             valid_manifests.append(manifest)
 
     print(
-        f"Found {len(valid_manifests)} manifests",
+        f"\nFound {len(valid_manifests)} manifests",
         "---> Running in async mode" if run_async else "",
         "-------------------------------------------------------",
         sep="\n\t"
