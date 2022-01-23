@@ -4,7 +4,6 @@ import yaml
 import requests
 import hashlib
 import shutil
-import threading
 from glob import glob
 from pathlib import Path
 
@@ -93,12 +92,11 @@ def process_manifest(manifest):
 
 def main():
     check_temp_path()
-    if len(sys.argv) != 2:
+    if len(sys.argv) < 2:
         print("Please provide a path")
         sys.exit(0)
     
     path = sys.argv[1]
-    run_async = sys.argv[2] if len(sys.argv) == 3 else False
 
     if not os.path.exists(path):
         print(f"Path {path} does not exist")
@@ -113,17 +111,12 @@ def main():
 
     print(
         f"\nFound {len(valid_manifests)} manifests",
-        "---> Running in async mode" if run_async else "",
         "-------------------------------------------------------",
-        sep="\n\t"
+        sep="\n"
     )
 
     for v in valid_manifests:
-        if run_async:
-            t = threading.Thread(target=process_manifest, args=(manifest,))
-            t.start()
-        else:
-            process_manifest(v)
+        process_manifest(v)
 
     clean_temp_path()
 
