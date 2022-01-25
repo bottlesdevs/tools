@@ -59,7 +59,7 @@ def download_file(url):
 def update_checksum(file_path, file_name, checksum):
     '''Update manifest checksum'''
     with open(file_path, 'r') as f:
-        data = yaml.load(f)
+        data = yaml.safe_load(f)
     
     step = [step for step in data['Steps'] if step['file_name'] == file_name][0]
     step['file_checksum'] = checksum
