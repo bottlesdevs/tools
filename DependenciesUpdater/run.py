@@ -56,11 +56,13 @@ def download_file(url):
         print(f"\n[ERROR] | {file_name}: File size is 0")
 
 
-def update_checksum(file_path, checksum):
+def update_checksum(file_path, file_name, checksum):
     '''Update manifest checksum'''
     with open(file_path, 'r') as f:
         data = yaml.load(f)
-    data['file_checksum'] = checksum
+    
+    step = [step for step in data['Steps'] if step['file_name'] == file_name][0]
+    step['file_checksum'] = checksum
     with open(file_path, 'w') as f:
         yaml.dump(data, f, sort_keys=False)
 
@@ -74,6 +76,7 @@ def process_manifest(manifest):
     for step in data['Steps']:
         if 'file_checksum' in step:
             url = step['url']
+            file_name = step['file_name']
             file_path = download_file(url)
             checksum = get_file_checksum(file_path)
 
@@ -83,9 +86,7 @@ def process_manifest(manifest):
                     f"---> (updating) | {name}: {checksum} -> {step['file_checksum']}", 
                     sep="\n\t"
                 )
-                exit()
-                update_checksum(manifest, checksum)
-                shutil.copy(file_path, manifest)
+                update_checksum(manifest, file_name, checksum)
 
             os.remove(file_path)
 
