@@ -76,6 +76,8 @@ def process_manifest(manifest):
     for step in data['Steps']:
         if 'file_checksum' in step:
             url = step['url']
+            if url.startswith("temp"):
+                continue
             file_name = step['file_name']
             file_path = download_file(url)
             checksum = get_file_checksum(file_path)
