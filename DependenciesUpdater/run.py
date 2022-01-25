@@ -74,7 +74,7 @@ def process_manifest(manifest):
     
     name = data["Name"]
     for step in data['Steps']:
-        if 'file_checksum' in step:
+        if 'file_checksum' in step and "file_name" in step:
             url = step['url']
             if url.startswith("temp"):
                 continue
