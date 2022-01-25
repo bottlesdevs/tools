@@ -40,7 +40,11 @@ def download_file(url):
     '''Downloads a file to __temp__ and returns its path'''
     file_name = url.split('/')[-1]
     file_path = f"{temp_path}/{file_name}"
-    response = requests.get(url, stream=True)
+    try:
+        response = requests.get(url, stream=True)
+    except requests.exceptions.MissingSchema as e:
+        print(f"\n[ERROR] | {file_name}: {e}")
+        return False
     total_size = int(response.headers.get("content-length", 0))
     block_size = 1024
     count = 0
@@ -54,6 +58,7 @@ def download_file(url):
         return file_path
     else:
         print(f"\n[ERROR] | {file_name}: File size is 0")
+        return False
 
 
 def update_checksum(file_path, file_name, checksum):
@@ -80,6 +85,8 @@ def process_manifest(manifest):
                 continue
             file_name = step['file_name']
             file_path = download_file(url)
+            if not file_path:
+                continue
             checksum = get_file_checksum(file_path)
 
             if checksum != step['file_checksum']:
