@@ -11,6 +11,7 @@ from pathlib import Path
 ignored_files = ["index.yml", "testing.yml"]
 temp_path = f"{Path.home()}/__temp__"
 progressbar_sym = "|/-\\"
+show_progress=False if os.environ.get("HIDE_PROGRESS") else True
 
 
 def clean_temp_path():
@@ -54,7 +55,8 @@ def download_file(url):
             for data in response.iter_content(block_size):
                 f.write(data)
                 count += 1
-                progress_bar(file_name, count, block_size, total_size)
+                if show_progress:
+                    progress_bar(file_name, count, block_size, total_size)
         return file_path
     else:
         print(f"\n[ERROR] | {file_name}: File size is 0")
