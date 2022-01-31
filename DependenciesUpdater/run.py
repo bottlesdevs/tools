@@ -68,7 +68,7 @@ def update_checksum(file_path, file_name, checksum):
     with open(file_path, 'r') as f:
         data = yaml.safe_load(f)
     
-    step = [step for step in data['Steps'] if step['file_name'] == file_name][0]
+    step = [step for step in data['Steps'] if step.get('file_name') and step['file_name'] == file_name][0]
     step['file_checksum'] = checksum
     with open(file_path, 'w') as f:
         yaml.dump(data, f, sort_keys=False)
