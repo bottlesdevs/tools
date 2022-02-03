@@ -73,6 +73,14 @@ def update_checksum(file_path, file_name, checksum):
     with open(file_path, 'w') as f:
         yaml.dump(data, f, sort_keys=False)
 
+def update_size(file_path, file_name, file_size):
+    with open(file_path, 'r') as f:
+        data = yaml.safe_load(f)
+    
+    step = [step for step in data['Steps'] if step.get('file_name') and step['file_name'] == file_name][0]
+    step['file_size'] = file_size
+    with open(file_path, 'w') as f:
+        yaml.dump(data, f, sort_keys=False)
 
 def process_manifest(manifest):      
     '''Processes a manifest'''
@@ -90,6 +98,7 @@ def process_manifest(manifest):
             if not file_path:
                 continue
             checksum = get_file_checksum(file_path)
+            file_size = os.path.getsize(file_path)
 
             if checksum != step['file_checksum']:
                 print(
@@ -98,6 +107,14 @@ def process_manifest(manifest):
                     sep="\n\t"
                 )
                 update_checksum(manifest, file_name, checksum)
+
+            if file_size != step['file_size']:
+                print(
+                    f"\n[SIZE_MISMATCH] | {name}", 
+                    f"---> (updating) | {name}: {size} -> {step['file_size']}", 
+                    sep="\n\t"
+                )
+                update_size(manifest, file_name, file_size)
 
             os.remove(file_path)
 
