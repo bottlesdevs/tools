@@ -111,7 +111,7 @@ def process_manifest(manifest):
             if file_size != step['file_size']:
                 print(
                     f"\n[SIZE_MISMATCH] | {name}", 
-                    f"---> (updating) | {name}: {size} -> {step['file_size']}", 
+                    f"---> (updating) | {name}: {file_size} -> {step['file_size']}", 
                     sep="\n\t"
                 )
                 update_size(manifest, file_name, file_size)
