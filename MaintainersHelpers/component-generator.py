@@ -64,6 +64,7 @@ def main():
             'url': file_url,
             'file_checksum': file_checksum,
             'file_size': file_size,
+            'rename': file_name,
         }]
     }
     
