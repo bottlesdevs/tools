@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 def main():
     if len(sys.argv) < 4:
         print('usage: component-generator.py <repository> <maintainer> <name> '
-              '<provider> <channel> <file-url> [rename]')
+              '<provider> <channel> <file-url> [file_path]')
         sys.exit(1)
 
     repository = sys.argv[1]
@@ -21,7 +21,7 @@ def main():
     provider = sys.argv[4]
     channel = sys.argv[5]
     file_url = sys.argv[6]
-    rename = sys.argv[7] if len(sys.argv) > 7 else None
+    file_path = sys.argv[7] if len(sys.argv) > 7 else None
 
     if repository != 'components':
         print('only components repository is supported')
@@ -31,25 +31,27 @@ def main():
         print('only http file urls are supported')
         sys.exit(1)
 
-    logger.info('creating temp directory')
-    temp_dir = os.path.join('_tmp')
-    if not os.path.exists('_tmp'):
-        os.makedirs(temp_dir)
-
-    logger.info('downloading file')
-    r = requests.get(file_url, allow_redirects=True)
-    if r.status_code != 200:
-        print('failed to download file')
-        sys.exit(1)
-
-    logger.info('saving file')
     file_name = file_url.split('/')[-1]
-    with open(os.path.join(temp_dir, file_name), 'wb') as f:
-        f.write(r.content)
+    if not file_path:
+        logger.info('creating temp directory')
+        temp_dir = os.path.join('_tmp')
+        if not os.path.exists('_tmp'):
+            os.makedirs(temp_dir)
+
+        logger.info('downloading file')
+        r = requests.get(file_url, allow_redirects=True)
+        if r.status_code != 200:
+            print('failed to download file')
+            sys.exit(1)
+
+        logger.info('saving file')
+        file_path = os.path.join(temp_dir, file_name)
+        with open(file_path, 'wb') as f:
+            f.write(r.content)
 
     logger.info('getting file checksum and size')
-    file_checksum = get_file_checksum(os.path.join(temp_dir, file_name))
-    file_size = os.path.getsize(os.path.join(temp_dir, file_name))
+    file_checksum = get_file_checksum(file_path)
+    file_size = os.path.getsize(file_path)
 
     logger.info('creating yaml file')
     yaml_file = {
@@ -62,7 +64,7 @@ def main():
             'url': file_url,
             'file_checksum': file_checksum,
             'file_size': file_size,
-            'rename': rename if rename else file_name
+            'rename': file_name,
         }]
     }
     
